@@ -25,15 +25,25 @@ const direcciones = {
 
 const initGame = () => {
     let htmlMarkup = `<div class='food' style='grid-area: ${foodX} / ${foodY}'></div>`;
-    htmlMarkup += `<div class='head' style='grid-area: ${snakeX} / ${snakeY}'></div>`;
 
     if (snakeX === foodX && snakeY === foodY) {
         changeFoodPosition()
         snakeBody.push([foodX, foodY]);
+        console.log({ snakeBody })
     };
+
+    for (let i = snakeBody.length - 1; i > 0; i--) {
+        snakeBody[i] = snakeBody[i - 1];
+    }
+
+    snakeBody[0] = [snakeY, snakeX];
 
     snakeX += velocityX;
     snakeY += velocityY;
+
+    for (let i = 0; i < snakeBody.length; i++) {
+        htmlMarkup += `<div class='head' style='grid-area: ${snakeBody[i][1]} / ${snakeBody[i][0]}'></div>`;
+    };
 
     playBroad.innerHTML = htmlMarkup;
 };
