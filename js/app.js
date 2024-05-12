@@ -2,6 +2,7 @@
 const playBroad = document.querySelector('.play-board');
 const scoreElement = document.querySelector('.score');
 const higScoreElement = document.querySelector('.high-score');
+const controls = document.querySelectorAll('.controls i');
 
 let gameOver = false;
 let setIntervalId;
@@ -92,6 +93,10 @@ const changeDirection = (e) => {
         velocityY = 1;
     };
 };
+
+[...controls].map(key => {
+    key.addEventListener('click', () => changeDirection({ key: key.dataset.key }));
+});
 
 changeFoodPosition();
 setIntervalId = setInterval(initGame, 125);
