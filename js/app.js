@@ -1,6 +1,9 @@
 
 const playBroad = document.querySelector('.play-board');
 
+let gameOver = false;
+let setIntervalId;
+
 let foodX,
     foodY;
 
@@ -23,13 +26,20 @@ const direcciones = {
     ARROWRIGHT: 'ArrowRight'
 };
 
+const handleGameOver = () => {
+    alert('game Over! por favor preciona ok para una nueva partida');
+    clearInterval(setIntervalId);
+    location.reload();
+};
+
 const initGame = () => {
+    if (gameOver) return handleGameOver();
+
     let htmlMarkup = `<div class='food' style='grid-area: ${foodX} / ${foodY}'></div>`;
 
     if (snakeX === foodX && snakeY === foodY) {
         changeFoodPosition()
         snakeBody.push([foodX, foodY]);
-        console.log({ snakeBody })
     };
 
     for (let i = snakeBody.length - 1; i > 0; i--) {
@@ -41,6 +51,8 @@ const initGame = () => {
     snakeX += velocityX;
     snakeY += velocityY;
 
+    if (snakeX <= 0 || snakeY > 30 || snakeY <= 0 || snakeY > 30) gameOver = true;
+
     for (let i = 0; i < snakeBody.length; i++) {
         htmlMarkup += `<div class='head' style='grid-area: ${snakeBody[i][1]} / ${snakeBody[i][0]}'></div>`;
     };
@@ -51,21 +63,21 @@ const initGame = () => {
 const changeDirection = (e) => {
     const { key } = e;
 
-    if (key === direcciones.ARROWUP) {
+    if (key === direcciones.ARROWUP && velocityX != 1) {
         velocityX = -1;
         velocityY = 0;
-    } else if (key === direcciones.ARROWDOWN) {
+    } else if (key === direcciones.ARROWDOWN && velocityX != -1) {
         velocityX = 1;
         velocityY = 0;
-    } else if (key === direcciones.ARROWLEFT) {
+    } else if (key === direcciones.ARROWLEFT && velocityY != 1) {
         velocityX = 0;
         velocityY = -1;
-    } else if (key === direcciones.ARROWRIGHT) {
+    } else if (key === direcciones.ARROWRIGHT && velocityY != -1) {
         velocityX = 0;
         velocityY = 1;
     };
 };
 
 changeFoodPosition();
-setInterval(initGame, 125);
+setIntervalId = setInterval(initGame, 125);
 document.addEventListener('keydown', changeDirection);
