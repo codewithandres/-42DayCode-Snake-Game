@@ -1,10 +1,14 @@
 
 const playBroad = document.querySelector('.play-board');
 const scoreElement = document.querySelector('.score');
+const higScoreElement = document.querySelector('.high-score');
 
 let gameOver = false;
 let setIntervalId;
 let score = 0;
+let highScore = localStorage.getItem('high-score') || 0;
+
+higScoreElement.textContent = `High Score: ${highScore}`;
 
 let foodX,
     foodY;
@@ -40,10 +44,15 @@ const initGame = () => {
     let htmlMarkup = `<div class='food' style='grid-area: ${foodX} / ${foodY}'></div>`;
 
     if (snakeX === foodX && snakeY === foodY) {
-        changeFoodPosition()
+        changeFoodPosition();
+
         snakeBody.push([foodX, foodY]);
         score++;
+        highScore = score >= highScore ? score : highScore;
+        localStorage.setItem('high-score', highScore);
+
         scoreElement.textContent = `Score: ${score}`;
+        higScoreElement.textContent = `High Score ${highScore}`;
     };
 
     for (let i = snakeBody.length - 1; i > 0; i--) {
